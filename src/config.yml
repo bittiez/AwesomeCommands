@@ -1,0 +1,3 @@
+# Enable or disable commands here
+# true = enabled, false = disabled
+NPRestart: false
