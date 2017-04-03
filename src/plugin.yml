@@ -1,7 +1,7 @@
 name: AwesomeCommands
 version: 1.0.0
 author: bittiez
-main: US.bittiez.AwesomeCommandsands.main
+main: US.bittiez.AwesomeCommands.main
 commands:
     NPRestart:
         description: Restart the server as soon as there are no players online (Using the command again will cancel this)
