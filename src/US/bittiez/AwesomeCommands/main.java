@@ -16,6 +16,8 @@ public class main extends JavaPlugin implements Listener {
 
     //NPRestart
     private boolean npRestart = false;
+    //NPStop
+    private boolean npStop = false;
 
     @Override
     public void onEnable() {
@@ -29,9 +31,11 @@ public class main extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender who, Command cmd, String label, String[] args) {
         switch (cmd.getName().toLowerCase()) {
             case "nprestart":
-                return npRestart(who);
             case "npr":
                 return npRestart(who);
+            case "npstop":
+            case "nps":
+                return npStop(who);
         }
         return false;
     }
@@ -49,7 +53,22 @@ public class main extends JavaPlugin implements Listener {
             if(npRestart)
                 who.sendMessage(STATIC.applyACPrefix("&aThe server will restart when the last player logs off."));
             else
-                who.sendMessage(STATIC.applyACPrefix("&aThe server will &6not &a restart when the last player logs off."));
+                who.sendMessage(STATIC.applyACPrefix("&aThe server will &6not &arestart when the last player logs off."));
+            return true;
+        }
+        return false;
+    }
+    private boolean npStop(CommandSender who) {
+        if (!configurator.config.getBoolean("NPStop"))
+            return false;
+
+        if (who.hasPermission(PERMISSIONS.ADMIN.NP_STOP)) {
+            npStop = !npStop;
+            if(npStop)
+                who.sendMessage(STATIC.applyACPrefix("&aThe server will be stopped when the last player logs off."));
+            else
+                who.sendMessage(STATIC.applyACPrefix("&aThe server will &6not &abe stopped when the last player logs off."));
+            return true;
         }
         return false;
     }
@@ -62,8 +81,11 @@ public class main extends JavaPlugin implements Listener {
     //
     @EventHandler
     public void onPlayerLogOff(PlayerQuitEvent e){
-        if(getServer().getOnlinePlayers().size() < 1){
+        if(getServer().getOnlinePlayers().size() < 1 && npRestart){
             getServer().spigot().restart();
+        }
+        if(getServer().getOnlinePlayers().size() < 1 && npStop){
+            getServer().shutdown();
         }
     }
 }
