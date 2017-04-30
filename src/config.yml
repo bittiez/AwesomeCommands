@@ -2,3 +2,14 @@
 # true = enabled, false = disabled
 NPRestart: false
 NPStop: false
+
+Search: false
+SearchUrls:
+  - 'https://www.google.com/#q=[SEARCH]'
+  - 'https://duckduckgo.com/?q=[SEARCH]'
+SearchSpace:
+  - '+'
+  - '+'
+SearchMsg:
+  - 'Search google: &6[LINK]'
+  - 'Search duck duck go: &6[LINK]'

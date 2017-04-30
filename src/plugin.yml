@@ -5,14 +5,16 @@ main: US.bittiez.AwesomeCommands.main
 commands:
     NPRestart:
         description: Restart the server as soon as there are no players online (Using the command again will cancel this)
-        usage: /NPRestart
         alias: /NPR
-    NPRestart:
+    NPStop:
         description: Stop the server as soon as there are no players online (Using the command again will cancel this)
-        usage: /NPStop
         alias: /NPS
+    Search:
+        description: Give urls with search paramaters
 permissions:
     AC.npr:
         description: Will wait until there are no more players online, then restart the server
     AC.nps:
         description: Will wait until there are no more players online, then stop the server
+    AC.search:
+        description: Will return urls set up in the config with the specific search message

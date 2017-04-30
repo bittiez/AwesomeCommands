@@ -5,4 +5,7 @@ public class PERMISSIONS {
         public static String NP_RESTART = "AC.npr";
         public static String NP_STOP = "AC.nps";
     }
+    public static class PLAYER {
+        public static String NP_SEARCH = "AC.search";
+    }
 }
