@@ -7,6 +7,12 @@ commands:
         description: Restart the server as soon as there are no players online (Using the command again will cancel this)
         usage: /NPRestart
         alias: /NPR
+    NPRestart:
+        description: Stop the server as soon as there are no players online (Using the command again will cancel this)
+        usage: /NPStop
+        alias: /NPS
 permissions:
     AC.npr:
         description: Will wait until there are no more players online, then restart the server
+    AC.nps:
+        description: Will wait until there are no more players online, then stop the server
