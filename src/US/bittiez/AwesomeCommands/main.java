@@ -3,6 +3,7 @@ package US.bittiez.AwesomeCommands;
 import US.bittiez.AwesomeCommands.Commands.Sit;
 import US.bittiez.AwesomeCommands.Commands.UnSit;
 import US.bittiez.Config.Configurator;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -146,13 +147,18 @@ public class main extends JavaPlugin implements Listener {
     //
     @EventHandler
     public void onPlayerLogOff(PlayerQuitEvent e) {
-        if (getServer().getOnlinePlayers().size() < 1 && npRestart) {
-            getServer().spigot().restart();
-        }
-        if (getServer().getOnlinePlayers().size() < 1 && npStop) {
-            getServer().shutdown();
-        }
-        if(debug)
-            log.info(getServer().getOnlinePlayers().size() + " online players.");
+        Bukkit.getScheduler().runTask(this, new Runnable() {
+            @Override
+            public void run() {
+                if (getServer().getOnlinePlayers().size() < 1 && npRestart) {
+                    getServer().spigot().restart();
+                }
+                if (getServer().getOnlinePlayers().size() < 1 && npStop) {
+                    getServer().shutdown();
+                }
+                if(debug)
+                    log.info(getServer().getOnlinePlayers().size() + " online players.");
+            }
+        });
     }
 }
