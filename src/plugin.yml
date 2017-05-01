@@ -11,6 +11,10 @@ commands:
         alias: /NPS
     Search:
         description: Give urls with search paramaters
+    Sit:
+        description: Makes all your wolves and ocelots sit
+    UnSit:
+        description: Makes all your wolves and ocelots stand
 permissions:
     AC.npr:
         description: Will wait until there are no more players online, then restart the server
@@ -18,3 +22,7 @@ permissions:
         description: Will wait until there are no more players online, then stop the server
     AC.search:
         description: Will return urls set up in the config with the specific search message
+    AC.sit:
+        description: See command description
+    AC.unsit:
+        description: See command description

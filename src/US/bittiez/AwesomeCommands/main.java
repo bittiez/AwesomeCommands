@@ -1,9 +1,12 @@
 package US.bittiez.AwesomeCommands;
 
+import US.bittiez.AwesomeCommands.Commands.Sit;
+import US.bittiez.AwesomeCommands.Commands.UnSit;
 import US.bittiez.Config.Configurator;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -40,7 +43,11 @@ public class main extends JavaPlugin implements Listener {
             case "nps":
                 return npStop(who);
             case "search":
-                return npSearch(who, args);
+                return search(who, args);
+            case "sit":
+                return sit(who);
+            case "unsit":
+                return unSit(who);
         }
         return false;
     }
@@ -49,20 +56,44 @@ public class main extends JavaPlugin implements Listener {
     //
     //
     //
-    private boolean npSearch(CommandSender who, String[] args){
+    private boolean sit(CommandSender who) {
+        if (!configurator.config.getBoolean("Sit", false)) {
+            if (debug)
+                who.sendMessage("This command has been disabled in the config.");
+            return true;
+        }
+        if (who.hasPermission(PERMISSIONS.PLAYER.SIT))
+            if (who instanceof Player)
+                new Thread(new Sit((Player) who)).start();
+        return true;
+    }
+
+    private boolean unSit(CommandSender who) {
+        if (!configurator.config.getBoolean("UnSit", false)) {
+            if (debug)
+                who.sendMessage("This command has been disabled in the config.");
+            return true;
+        }
+        if (who.hasPermission(PERMISSIONS.PLAYER.UNSIT))
+            if (who instanceof Player)
+                new Thread(new UnSit((Player) who)).start();
+        return true;
+    }
+
+    private boolean search(CommandSender who, String[] args) {
         if (!configurator.config.getBoolean("Search", false)) {
-            if(debug)
+            if (debug)
                 who.sendMessage("This command has been disabled in the config.");
             return true;
         }
 
-        if(who.hasPermission(PERMISSIONS.PLAYER.NP_SEARCH) && args.length > 0){
+        if (who.hasPermission(PERMISSIONS.PLAYER.SEARCH) && args.length > 0) {
             List<String> urls = configurator.config.getStringList("SearchUrls");
             List<String> replacement = configurator.config.getStringList("SearchSpace");
             List<String> message = configurator.config.getStringList("SearchMsg");
 
             for (int i = 0; i < urls.size(); i++) {
-                if(replacement.size() >= i && message.size() >= i) {
+                if (replacement.size() >= i && message.size() >= i) {
                     String link = urls.get(i).replace("[SEARCH]", String.join(replacement.get(i), args));
                     who.sendMessage(ChatColor.translateAlternateColorCodes('&', message.get(i).replace("[LINK]", link)));
                 }
@@ -71,16 +102,17 @@ public class main extends JavaPlugin implements Listener {
 
         return true;
     }
+
     private boolean npRestart(CommandSender who) {
         if (!configurator.config.getBoolean("NPRestart", false)) {
-            if(debug)
+            if (debug)
                 who.sendMessage("This command has been disabled in the config.");
             return true;
         }
 
         if (who.hasPermission(PERMISSIONS.ADMIN.NP_RESTART)) {
             npRestart = !npRestart;
-            if(npRestart)
+            if (npRestart)
                 who.sendMessage(STATIC.applyACPrefix("&aThe server will restart when the last player logs off."));
             else
                 who.sendMessage(STATIC.applyACPrefix("&aThe server will &6not &arestart when the last player logs off."));
@@ -88,16 +120,17 @@ public class main extends JavaPlugin implements Listener {
         }
         return true;
     }
+
     private boolean npStop(CommandSender who) {
         if (!configurator.config.getBoolean("NPStop", false)) {
-            if(debug)
+            if (debug)
                 who.sendMessage("This command has been disabled in the config.");
             return true;
         }
 
         if (who.hasPermission(PERMISSIONS.ADMIN.NP_STOP)) {
             npStop = !npStop;
-            if(npStop)
+            if (npStop)
                 who.sendMessage(STATIC.applyACPrefix("&aThe server will be stopped when the last player logs off."));
             else
                 who.sendMessage(STATIC.applyACPrefix("&aThe server will &6not &abe stopped when the last player logs off."));
@@ -107,18 +140,19 @@ public class main extends JavaPlugin implements Listener {
     }
 
 
-
     //Event handlers
     //
     //
     //
     @EventHandler
-    public void onPlayerLogOff(PlayerQuitEvent e){
-        if(getServer().getOnlinePlayers().size() < 1 && npRestart){
+    public void onPlayerLogOff(PlayerQuitEvent e) {
+        if (getServer().getOnlinePlayers().size() < 1 && npRestart) {
             getServer().spigot().restart();
         }
-        if(getServer().getOnlinePlayers().size() < 1 && npStop){
+        if (getServer().getOnlinePlayers().size() < 1 && npStop) {
             getServer().shutdown();
         }
+        if(debug)
+            log.info(getServer().getOnlinePlayers().size() + " online players.");
     }
 }

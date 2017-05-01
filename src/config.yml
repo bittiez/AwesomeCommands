@@ -2,6 +2,8 @@
 # true = enabled, false = disabled
 NPRestart: false
 NPStop: false
+Sit: false
+UnSit: false
 
 Search: false
 SearchUrls:
