@@ -1,8 +1,8 @@
 package US.bittiez.AwesomeCommands;
 
+import US.bittiez.AwesomeCommands.Commands.Calc;
 import US.bittiez.AwesomeCommands.Commands.Sit;
 import US.bittiez.AwesomeCommands.Commands.UnSit;
-import US.bittiez.AwesomeCommands.Math.EvalUtil;
 import US.bittiez.Config.Configurator;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -65,16 +65,8 @@ public class main extends JavaPlugin implements Listener {
                 who.sendMessage(STATIC.applyACPrefix("This command has been disabled in the config."));
             return true;
         }
-        if(who.hasPermission(PERMISSIONS.PLAYER.CALC)) {
-            Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                try {
-                    String eval = String.join(" ", args);
-                    who.sendMessage(STATIC.applyACPrefix(eval + " = " + EvalUtil.eval(eval).toString()));
-                } catch (Exception e) {
-                    who.sendMessage(STATIC.applyACPrefix("That doesn't appear to be a valid math statement."));
-                }
-            });
-        }
+        if(who.hasPermission(PERMISSIONS.PLAYER.CALC))
+            new Thread(new Calc(who, args)).start();
         return true;
     }
 
