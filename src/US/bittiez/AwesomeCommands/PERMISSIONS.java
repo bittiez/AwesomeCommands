@@ -9,5 +9,6 @@ public class PERMISSIONS {
         public static String SEARCH = "AC.search";
         public static String SIT = "AC.sit";
         public static String UNSIT = "AC.unsit";
+        public static String CALC = "AC.calc";
     }
 }

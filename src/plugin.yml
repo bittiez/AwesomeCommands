@@ -15,6 +15,8 @@ commands:
         description: Makes all your wolves and ocelots sit
     UnSit:
         description: Makes all your wolves and ocelots stand
+    Calc:
+        description: Runs a math expression and returns the answer
 permissions:
     AC.npr:
         description: Will wait until there are no more players online, then restart the server
@@ -25,4 +27,6 @@ permissions:
     AC.sit:
         description: See command description
     AC.unsit:
+        description: See command description
+    AC.calc:
         description: See command description

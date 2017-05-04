@@ -2,9 +2,9 @@ package US.bittiez.AwesomeCommands;
 
 import US.bittiez.AwesomeCommands.Commands.Sit;
 import US.bittiez.AwesomeCommands.Commands.UnSit;
+import US.bittiez.AwesomeCommands.Math.EvalUtil;
 import US.bittiez.Config.Configurator;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,6 +49,8 @@ public class main extends JavaPlugin implements Listener {
                 return sit(who);
             case "unsit":
                 return unSit(who);
+            case "calc":
+                return calc(who, args);
         }
         return false;
     }
@@ -57,10 +59,29 @@ public class main extends JavaPlugin implements Listener {
     //
     //
     //
+    private boolean calc(CommandSender who, String[] args) {
+        if (!configurator.config.getBoolean("Calc", false)) {
+            if (debug)
+                who.sendMessage(STATIC.applyACPrefix("This command has been disabled in the config."));
+            return true;
+        }
+        if(who.hasPermission(PERMISSIONS.PLAYER.CALC)) {
+            Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+                try {
+                    String eval = String.join(" ", args);
+                    who.sendMessage(STATIC.applyACPrefix(eval + " = " + EvalUtil.eval(eval).toString()));
+                } catch (Exception e) {
+                    who.sendMessage(STATIC.applyACPrefix("That doesn't appear to be a valid math statement."));
+                }
+            });
+        }
+        return true;
+    }
+
     private boolean sit(CommandSender who) {
         if (!configurator.config.getBoolean("Sit", false)) {
             if (debug)
-                who.sendMessage("This command has been disabled in the config.");
+                who.sendMessage(STATIC.applyACPrefix("This command has been disabled in the config."));
             return true;
         }
         if (who.hasPermission(PERMISSIONS.PLAYER.SIT))
@@ -72,7 +93,7 @@ public class main extends JavaPlugin implements Listener {
     private boolean unSit(CommandSender who) {
         if (!configurator.config.getBoolean("UnSit", false)) {
             if (debug)
-                who.sendMessage("This command has been disabled in the config.");
+                who.sendMessage(STATIC.applyACPrefix("This command has been disabled in the config."));
             return true;
         }
         if (who.hasPermission(PERMISSIONS.PLAYER.UNSIT))
@@ -84,7 +105,7 @@ public class main extends JavaPlugin implements Listener {
     private boolean search(CommandSender who, String[] args) {
         if (!configurator.config.getBoolean("Search", false)) {
             if (debug)
-                who.sendMessage("This command has been disabled in the config.");
+                who.sendMessage(STATIC.applyACPrefix("This command has been disabled in the config."));
             return true;
         }
 
@@ -96,7 +117,7 @@ public class main extends JavaPlugin implements Listener {
             for (int i = 0; i < urls.size(); i++) {
                 if (replacement.size() >= i && message.size() >= i) {
                     String link = urls.get(i).replace("[SEARCH]", String.join(replacement.get(i), args));
-                    who.sendMessage(ChatColor.translateAlternateColorCodes('&', message.get(i).replace("[LINK]", link)));
+                    who.sendMessage(STATIC.applyACPrefix(message.get(i).replace("[LINK]", link)));
                 }
             }
         }
@@ -107,7 +128,7 @@ public class main extends JavaPlugin implements Listener {
     private boolean npRestart(CommandSender who) {
         if (!configurator.config.getBoolean("NPRestart", false)) {
             if (debug)
-                who.sendMessage("This command has been disabled in the config.");
+                who.sendMessage(STATIC.applyACPrefix("This command has been disabled in the config."));
             return true;
         }
 
@@ -147,18 +168,15 @@ public class main extends JavaPlugin implements Listener {
     //
     @EventHandler
     public void onPlayerLogOff(PlayerQuitEvent e) {
-        Bukkit.getScheduler().runTask(this, new Runnable() {
-            @Override
-            public void run() {
-                if (getServer().getOnlinePlayers().size() < 1 && npRestart) {
-                    getServer().spigot().restart();
-                }
-                if (getServer().getOnlinePlayers().size() < 1 && npStop) {
-                    getServer().shutdown();
-                }
-                if(debug)
-                    log.info(getServer().getOnlinePlayers().size() + " online players.");
+        Bukkit.getScheduler().runTask(this, () -> {
+            if (getServer().getOnlinePlayers().size() < 1 && npRestart) {
+                getServer().spigot().restart();
             }
+            if (getServer().getOnlinePlayers().size() < 1 && npStop) {
+                getServer().shutdown();
+            }
+            if (debug)
+                log.info(getServer().getOnlinePlayers().size() + " online players.");
         });
     }
 }

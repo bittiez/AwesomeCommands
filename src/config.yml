@@ -4,6 +4,7 @@ NPRestart: false
 NPStop: false
 Sit: false
 UnSit: false
+Calc: false
 
 Search: false
 SearchUrls:
