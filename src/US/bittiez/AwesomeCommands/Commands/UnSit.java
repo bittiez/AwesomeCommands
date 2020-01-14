@@ -22,8 +22,6 @@ public class UnSit implements Runnable {
             if (entity instanceof Tameable && ((Tameable) entity).isTamed() && ((Tameable) entity).getOwner().equals(player)) {
                 if (entity instanceof Wolf)
                     ((Wolf) entity).setSitting(false);
-                if (entity instanceof Ocelot)
-                    ((Ocelot) entity).setSitting(false);
             }
         }
     }
